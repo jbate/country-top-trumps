@@ -1,0 +1,62 @@
+@font-face {
+  font-family: Bree;
+  src: url('../fonts/BreeSerif_Reg.otf');
+}
+@font-face {
+  font-family: Redressed;
+  src: url('../fonts/Redressed.ttf');
+}
+
+html {
+	min-height: 101%;
+	line-height: 1.4;
+	font-family: Bree,'Helvetica Neue', Helvetica, Arial, sans-serif;
+	background: #f0f0f0;
+}
+#holding-card, #challenging-card {
+	width: 45%;
+	margin-left: 2%;
+	margin-right: 2%;
+	float: left;
+	border: 1px solid #999;
+	background: white;
+}
+.inner {
+	border-radius: 10px;
+	padding: 3%;
+}
+.criterion {
+	float: left;
+	margin-right: 1%;
+}
+img {
+	max-width: 100%;
+	border-radius: 15px;
+}
+h1 {
+	font-family: Redressed,'Helvetica Neue', Helvetica, Arial, sans-serif;
+	margin-top: 0;
+}
+.clear {
+	clear: both;
+}
+button {
+	border: 5px solid #E94E77;
+	background-color: #D68189;
+	color: #F4EAD5;
+	padding: 4px 10px;
+	border-radius: 10px;
+	box-shadow: 5px 5px 0 0 rgba(0,0,0,0.15);
+	font-size: .8em;
+	outline: 0 none;
+}
+button[disabled] {
+	background-color: #E94E77;
+	box-shadow: none;
+}
+button:not([disabled]):hover {
+	color: white;
+	background-color: #4472b9;
+	box-shadow: 5px 5px 0 0 rgba(0,0,0,0.1);
+	cursor: pointer;
+}
