@@ -20,6 +20,7 @@ html {
 	float: left;
 	border: 1px solid #999;
 	background: white;
+	box-shadow: 5px 5px 0 0 rgba(0,0,0,0.1);
 }
 .inner {
 	border-radius: 10px;
