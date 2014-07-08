@@ -1,6 +1,7 @@
 $(function(){
     var indexes = [],
         cards = [];
+        highScore = 0;
     indexes.holdingIndex = 0;
     indexes.challengingIndex = 0;
     cards.holdingCards = null;
@@ -10,6 +11,7 @@ $(function(){
         countries.sort(function() { return 0.5 - Math.random() }); // shuffle
         cards.holdingCards = countries.splice(0, countries.length/2);
         cards.challengingCards = countries;
+        highScore = cards.holdingCards.length;
         drawCard("holding");
         drawCard("challenging");
     });
@@ -46,6 +48,9 @@ $(function(){
         .append(createCriterion("Borders", formatNumber(card.borders.length), "", deck))
 
         .append("<div class='cards-remaining clear'><strong>Cards remaining: </strong><span>" + cards[deck + "Cards"].length + "</span></div>");
+        if(deck == "holding"){
+            $("#" + deck + "-card .inner").append("<div class='high-score'><strong>High score: </strong><span>" + highScore + "</span></div>");
+        }
     }
 
     function createCriterion(key, value, suffix, deck){
@@ -69,6 +74,7 @@ $(function(){
                 // If Win, take card, else if Lose, give it up
                 if(result == "WIN"){
                     takeCard(deck);
+                    updateHighScore(cards.holdingCards.length);
                 } else if (result == "LOSE"){
                     takeCard(swapDeck(deck));
                 }
@@ -105,5 +111,11 @@ $(function(){
 
     function formatNumber (num) {
         return (num) ? num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") : 0;
+    }
+
+    function updateHighScore (score){
+        if(score > highScore){
+            highScore = score;
+        }
     }
 });
