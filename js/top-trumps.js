@@ -7,14 +7,26 @@ $(function(){
     cards.holdingCards = null;
     cards.challengingCards = null;
 
-    $.getJSON("country-data.json", function(countries){
+    if('localStorage' in window && localStorage.getItem("countries") !== null){
+        var countries = JSON.parse(localStorage.getItem("countries"));
+        setupPack(countries);
+    } else {
+        $.getJSON("country-data.json", function(countries){
+            if('localStorage' in window){
+                localStorage.setItem("countries", JSON.stringify(countries));
+            }
+            setupPack(countries);
+        });
+    }
+
+    function setupPack (countries){
         countries.sort(function() { return 0.5 - Math.random() }); // shuffle
         cards.holdingCards = countries.splice(0, countries.length/2);
         cards.challengingCards = countries;
         highScore = cards.holdingCards.length;
         drawCard("holding");
         drawCard("challenging");
-    });
+    }
 
     function drawCard(deck){
         // Reset back to 0 if at the end
