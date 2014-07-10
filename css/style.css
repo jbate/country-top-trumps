@@ -45,12 +45,12 @@ strong {
 	color: #999;
 }
 button {
-	border: 5px solid #E94E77;
+	border: .4em solid #E94E77;
 	background-color: #D68189;
 	color: #F4EAD5;
-	padding: 4px 10px;
+	padding: .3em .5em;
 	border-radius: 10px;
-	box-shadow: 5px 5px 0 0 rgba(0,0,0,0.15);
+	box-shadow: 2px 2px 0 0 rgba(0,0,0,0.15);
 	font-size: .8em;
 	outline: 0 none;
 }
@@ -61,26 +61,23 @@ button[disabled] {
 button:not([disabled]):hover {
 	color: white;
 	background-color: #4472b9;
-	box-shadow: 5px 5px 0 0 rgba(0,0,0,0.1);
+	box-shadow: 2px 2px 0 0 rgba(0,0,0,0.1);
 	cursor: pointer;
 }
-.flash-high-score{
- 	-webkit-animation: color-change 1s;
-    -moz-animation: color-change 1s;
-    animation: color-change 1s;
-}
-@-webkit-keyframes color-change {
-    0% { color: black; }
-    50% { color: red; }
-    100% { color: black; }
-}
-@-moz-keyframes color-change {
-    0% { color: black; }
-    50% { color: red; }
-    100% { color: black; }
-}
-keyframes color-change {
-    0% { color: black; }
-    50% { color: red; }
-    100% { color: black; }
+
+@media (max-width: 36.25em){
+	#holding-card, #challenging-card {
+		width: 45%;
+		font-size: 0.75em;
+		margin-bottom: 2%;
+	}
+	.criterion {
+		float: none;
+	}
+	strong {
+		display: block;
+	}
+	button {
+		font-size: .8em;
+	}
 }
