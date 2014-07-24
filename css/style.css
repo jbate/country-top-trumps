@@ -13,8 +13,11 @@ html {
 	font-family: Bree,'Helvetica Neue', Helvetica, Arial, sans-serif;
 	background: #f0f0f0;
 }
+body {
+	display:flex;
+}
 #holding-card, #challenging-card {
-	width: 45%;
+	width: 25%;
 	margin-left: 2%;
 	margin-right: 2%;
 	float: left;
@@ -24,14 +27,30 @@ html {
 }
 .inner {
 	border-radius: 10px;
-	padding: 3%;
+	padding: 5%;
 }
 .criterion {
-	float: left;
-	margin-right: 1%;
+	background-color: #d14;
+	margin: 2% 0;
+	padding: 2%;
+	color: white;
+}
+#holding-card .criterion {	
+	cursor: pointer;
+}
+.criterion span {
+	float: right;
+}
+.criterion strong {
+	color: white;
 }
 .clear {
 	clear: both;
+}
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 img {
 	max-width: 100%;
@@ -39,29 +58,19 @@ img {
 }
 h1 {
 	font-family: Redressed,'Helvetica Neue', Helvetica, Arial, sans-serif;
+	color: #0095da;
 	margin-top: 0;
 }
 strong {
 	color: #999;
 }
-button {
-	border: .4em solid #E94E77;
-	background-color: #D68189;
-	color: #F4EAD5;
-	padding: .3em .5em;
-	border-radius: 10px;
-	box-shadow: 2px 2px 0 0 rgba(0,0,0,0.15);
-	font-size: .8em;
-	outline: 0 none;
-}
+
 button[disabled] {
-	background-color: #E94E77;
-	box-shadow: none;
+	background-color: #0095da;
 }
 button:not([disabled]):hover {
 	color: white;
-	background-color: #4472b9;
-	box-shadow: 2px 2px 0 0 rgba(0,0,0,0.1);
+	background-color: #0095da;
 	cursor: pointer;
 }
 
