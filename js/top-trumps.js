@@ -68,13 +68,14 @@ $(function(){
     function createCriterion(key, value, suffix, deck){
         var container = $("<div/>", {
             "html": "<strong>" + key + ":</strong> ",
-            "class": "criterion"
+            "class": "criterion clearfix"
         });
 
         if(deck == "holding"){
-            container.append($("<button/>", {
+            container.append($("<span/>", {
                 html: value + suffix
-            }).on("click", function(){
+            }));
+            container.on("click", function(){
                 // Convert to number
                 var holdingVal = (value) ? parseInt(value.replace(/,/g,'')) : value;
                 var challengingCard = takeOpposingCard(deck, false);
@@ -90,12 +91,10 @@ $(function(){
                 } else if (result == "LOSE"){
                     takeCard(swapDeck(deck));
                 }
-            }));
+            });
         } else {
-            container.append($("<button/>", { 
-                text: "?",
-                disabled: "disabled",
-                readonly: "readonly" 
+            container.append($("<span/>", { 
+                text: "?"
             }));
         }
         return container;
