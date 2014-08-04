@@ -24,6 +24,7 @@ $(function(){
         cards.holdingCards = countries.splice(0, countries.length/2);
         cards.challengingCards = countries;
         highScore = cards.holdingCards.length;
+        updateHighScore();
         drawCard("holding");
         drawCard("challenging");
     }
@@ -60,9 +61,6 @@ $(function(){
         .append(createCriterion("Borders", formatNumber(card.borders.length), "", deck))
 
         .append("<div class='cards-remaining clear'><strong>Cards remaining: </strong><span>" + cards[deck + "Cards"].length + "</span></div>");
-        if(deck == "holding"){
-            $("#" + deck + "-card .inner").append("<div class='high-score'><strong>High score: </strong><span>" + highScore + "</span></div>");
-        }
     }
 
     function createCriterion(key, value, suffix, deck){
@@ -128,5 +126,6 @@ $(function(){
         if(score > highScore){
             highScore = score;
         }
+        $("#high-score").text(highScore);
     }
 });
