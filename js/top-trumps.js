@@ -23,7 +23,11 @@ $(function(){
         countries.sort(function() { return 0.5 - Math.random() }); // shuffle
         cards.holdingCards = countries.splice(0, countries.length/2);
         cards.challengingCards = countries;
-        highScore = cards.holdingCards.length;
+        if('localStorage' in window && localStorage.getItem("highScore") !== null){
+            highScore = JSON.parse(localStorage.getItem("highScore"));
+        } else {
+            highScore = cards.holdingCards.length;
+        }
         updateHighScore();
         drawCard("holding");
         drawCard("challenging");
@@ -127,6 +131,9 @@ $(function(){
     function updateHighScore (score){
         if(score > highScore){
             highScore = score;
+            if('localStorage' in window){
+                localStorage.setItem("highScore", JSON.stringify(highScore));
+            }
         }
         $("#high-score span").text(highScore);
     }
