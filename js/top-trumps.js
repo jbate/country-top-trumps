@@ -46,20 +46,22 @@ $(function(){
         var flag = $("<img/>", {
             "src": "svg/country-4x3/" + card.alpha2Code.toLowerCase() + ".svg"
         });
-
+        
         // Add to DOM
         $("#" + deck + "-card .inner").html("<h1>" + card.name + "</h1>")
         .append(flag)
-        .append("<div> " +
-            "<strong>Native name:</strong> " + card.nativeName + "<br> " + 
-            "<strong>Capital:</strong> " + card.capital + "</div>"
+        .append($("<div/>", { 
+                                "class": "facts"
+                             })
+            .append("<strong>Native name:</strong> " + card.nativeName + "<br> " + 
+                    "<strong>Capital:</strong> " + card.capital)
+
+            // Criteria to play with
+            .append(createCriterion("Area", formatNumber(card.area), " km<sup>2</sup>", deck))
+            .append(createCriterion("Population", formatNumber(card.population), "", deck))
+            .append(createCriterion("Borders", formatNumber(card.borders.length), "", deck))
+
         )
-
-        // Criteria to play with
-        .append(createCriterion("Area", formatNumber(card.area), " km<sup>2</sup>", deck))
-        .append(createCriterion("Population", formatNumber(card.population), "", deck))
-        .append(createCriterion("Borders", formatNumber(card.borders.length), "", deck))
-
         .append("<div class='cards-remaining clear'><strong>Cards remaining: </strong><span>" + cards[deck + "Cards"].length + "</span></div>");
     }
 
@@ -126,6 +128,6 @@ $(function(){
         if(score > highScore){
             highScore = score;
         }
-        $("#high-score").text(highScore);
+        $("#high-score span").text(highScore);
     }
 });
