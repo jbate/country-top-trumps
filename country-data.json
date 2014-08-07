@@ -2384,7 +2384,7 @@
         "gini": null, 
         "name": "Gambia", 
         "alpha3Code": "GMB", 
-        "area": null, 
+        "area": 10689, 
         "timezones": null, 
         "region": "Africa", 
         "demonym": "Gambian", 
@@ -2418,7 +2418,7 @@
         "gini": null, 
         "name": "Georgia", 
         "alpha3Code": "GEO", 
-        "area": null, 
+        "area": 69700, 
         "timezones": null, 
         "region": "Asia", 
         "demonym": "Georgian", 
@@ -4614,7 +4614,7 @@
         "gini": null, 
         "name": "Myanmar", 
         "alpha3Code": "MMR", 
-        "area": null, 
+        "area": 676578, 
         "timezones": [
             "UTC+06:30"
         ], 
