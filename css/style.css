@@ -13,11 +13,8 @@ html {
 	font-family: Bree,'Helvetica Neue', Helvetica, Arial, sans-serif;
 	background: #f0f0f0;
 }
-body {
-	display:flex;
-}
 #holding-card, #challenging-card {
-	width: 25%;
+	width: 30%;
 	margin-left: 2%;
 	margin-right: 2%;
 	float: left;
@@ -44,6 +41,9 @@ body {
 .criterion strong {
 	color: white;
 	float: left;
+}
+#high-score {
+	text-transform: uppercase;
 }
 .clear {
 	clear: both;
@@ -75,17 +75,23 @@ button:not([disabled]):hover {
 	cursor: pointer;
 }
 
-@media (max-width: 36.25em){
+@media (max-width: 40em){
 	#holding-card, #challenging-card {
-		width: 45%;
-		font-size: 0.75em;
+		width: 96%;
 		margin-bottom: 2%;
+		font-size: 0.75em;
+	}
+	.facts {
+		float: left;
+		width: 46%;
+		padding: 0 2% 0 0;
+	}
+	img {
+		float: right;
+		width: 50%;
 	}
 	.criterion {
 		float: none;
-	}
-	strong {
-		display: block;
 	}
 	button {
 		font-size: .8em;
