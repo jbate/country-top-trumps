@@ -120,7 +120,7 @@ $(function(){
         var deckToTakeFrom = swapDeck(deck);
         var index = indexes[deckToTakeFrom + "Index"]-1;
         var cardsToTakeFrom = cards[deckToTakeFrom + "Cards"];
-        var card = (remove) ? cardsToTakeFrom.splice(index, 1) : cardsToTakeFrom[index];
+        var card = (remove) ? cardsToTakeFrom.splice(index, 1)[0] : cardsToTakeFrom[index];
         return card;
     }   
 
