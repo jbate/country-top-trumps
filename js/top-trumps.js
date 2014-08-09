@@ -39,6 +39,7 @@ $(function(){
             // Game over
             $("#" + deck + "-card .inner").html("<h1>Game over</h1>" + 
             ((cards["holdingCards"].length == 0) ? "You lose" : "You win!"));
+            updateCardsRemaining(deck);
         } else {
             // Pick a new card
             var array = cards[deck + "Cards"];
@@ -65,8 +66,8 @@ $(function(){
                 .append(createCriterion("Area", formatNumber(card.area), " km<sup>2</sup>", deck))
                 .append(createCriterion("Population", formatNumber(card.population), "", deck))
                 .append(createCriterion("Borders", formatNumber(card.borders.length), "", deck))    
-        )
-        .append("<div class='cards-remaining clear'><strong>Cards remaining: </strong><span>" + cards[deck + "Cards"].length + "</span></div>");
+        );
+        updateCardsRemaining(deck);
     }
 
     function createCriterion(key, value, suffix, deck){
@@ -92,8 +93,10 @@ $(function(){
                 if(result == "WIN"){
                     takeCard(deck);
                     updateHighScore(cards.holdingCards.length);
+                    updateCardsRemaining(deck);
                 } else if (result == "LOSE"){
                     takeCard(swapDeck(deck));
+                    updateCardsRemaining(swapDeck(deck));
                 }
             });
         } else {
@@ -109,7 +112,6 @@ $(function(){
         var myDeck = cards[deck + "Cards"];
         myDeck.push(card);
         drawCard(swapDeck(deck));
-        $("#" + deck + "-card .cards-remaining span").text(myDeck.length);
     }
 
     function swapDeck(deck) {
@@ -135,5 +137,9 @@ $(function(){
             }
         }
         $("#high-score span").text(highScore);
+    }
+
+    function updateCardsRemaining(deck){
+        $("#" + deck + "-cards-remaining span").text(cards[deck + "Cards"].length);
     }
 });
