@@ -14,21 +14,21 @@ html {
 	background: #f0f0f0;
 }
 #holding-card, #challenging-card {
-	width: 30%;
+	width: 35%;
 	margin-left: 2%;
 	margin-right: 2%;
 	float: left;
-	border: 1px solid #999;
-	background: white;
-	box-shadow: 5px 5px 0 0 rgba(0,0,0,0.1);
+	background: #0095da;
+	border-radius: 10px;
 }
 .inner {
-	border-radius: 10px;
-	padding: 5%;
+	padding: 2%;
+	margin: 3%;
+	background: white;
 }
 .criterion {
 	background-color: #d14;
-	margin: 2% 0;
+	margin: 2% 0 0 0;
 	padding: 2%;
 	color: white;
 }
@@ -73,6 +73,16 @@ button:not([disabled]):hover {
 	color: white;
 	background-color: #0095da;
 	cursor: pointer;
+}
+
+@media (max-width: 50em){
+	#holding-card, #challenging-card {
+		width: 46%;
+	}
+	#holding-cards-remaining {
+		clear: both;
+		padding-top: 10px;
+	}
 }
 
 @media (max-width: 40em){
