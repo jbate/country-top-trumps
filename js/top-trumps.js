@@ -68,6 +68,7 @@ $(function(){
                 .append(createCriterion("Borders", formatNumber(card.borders.length), "", deck))    
         );
         updateCardsRemaining(deck);
+        preloadNextImage(deck);
     }
 
     function createCriterion(key, value, suffix, deck){
@@ -141,5 +142,15 @@ $(function(){
 
     function updateCardsRemaining(deck){
         $("#" + deck + "-cards-remaining span").text(cards[deck + "Cards"].length);
+    }
+
+    function preloadNextImage(deck){
+        // Get the next one
+        var card = cards[deck + "Cards"][1];
+        if(card){
+            var nextImage = new Image();
+            nextImage.src = "svg/country-4x3/" + card.alpha2Code.toLowerCase() + ".svg";
+        }
+                
     }
 });
