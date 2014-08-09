@@ -1,9 +1,6 @@
 $(function(){
-    var indexes = [],
-        cards = [];
+    var cards = [],
         highScore = 0;
-    indexes.holdingIndex = 0;
-    indexes.challengingIndex = 0;
     cards.holdingCards = null;
     cards.challengingCards = null;
 
@@ -20,29 +17,35 @@ $(function(){
     }
 
     function setupPack (countries){
-        countries.sort(function() { return 0.5 - Math.random() }); // shuffle
-        cards.holdingCards = countries.splice(0, countries.length/2);
+        countries.sort(function() { return 0.5 - Math.random() }); // Shuffle deck
+        cards.holdingCards = countries.splice(0, countries.length/2); // Split in two
         cards.challengingCards = countries;
+        // Read/Set high score data
         if('localStorage' in window && localStorage.getItem("highScore") !== null){
             highScore = JSON.parse(localStorage.getItem("highScore"));
         } else {
             highScore = cards.holdingCards.length;
         }
+        // Render high score on page
         updateHighScore();
+        // Draw the cards
         drawCard("holding");
         drawCard("challenging");
     }
 
+    // Draw a card from the deck
     function drawCard(deck){
-        // Reset back to 0 if at the end
-        if(indexes[deck + "Index"] == cards[deck + "Cards"].length){
-            indexes[deck + "Index"] = 0;
+        if(cards[deck + "Cards"].length == 0){
+            // Game over
+            $("#" + deck + "-card .inner").html("<h1>Game over</h1>" + 
+            ((cards["holdingCards"].length == 0) ? "You lose" : "You win!"));
+        } else {
+            // Pick a new card
+            var array = cards[deck + "Cards"];
+            var card = array[0];
+            // Render it
+            showCard(card, deck);
         }
-        var index = indexes[deck + "Index"];
-        var array = cards[deck + "Cards"];
-        var card = array[index];
-        showCard(card, deck);
-        indexes[deck + "Index"]++;
     }
 
     function showCard(card, deck){
@@ -54,17 +57,14 @@ $(function(){
         // Add to DOM
         $("#" + deck + "-card .inner").html("<h1>" + card.name + "</h1>")
         .append(flag)
-        .append($("<div/>", { 
-                                "class": "facts"
-                             })
-            .append("<strong>Native name:</strong> " + card.nativeName + "<br> " + 
-                    "<strong>Capital:</strong> " + card.capital)
+        .append($("<div/>", { "class": "facts" })
+                .append("<strong>Native name:</strong> " + card.nativeName + "<br> " + 
+                        "<strong>Capital:</strong> " + card.capital)
 
-            // Criteria to play with
-            .append(createCriterion("Area", formatNumber(card.area), " km<sup>2</sup>", deck))
-            .append(createCriterion("Population", formatNumber(card.population), "", deck))
-            .append(createCriterion("Borders", formatNumber(card.borders.length), "", deck))
-
+                // Criteria to play with
+                .append(createCriterion("Area", formatNumber(card.area), " km<sup>2</sup>", deck))
+                .append(createCriterion("Population", formatNumber(card.population), "", deck))
+                .append(createCriterion("Borders", formatNumber(card.borders.length), "", deck))    
         )
         .append("<div class='cards-remaining clear'><strong>Cards remaining: </strong><span>" + cards[deck + "Cards"].length + "</span></div>");
     }
@@ -118,9 +118,8 @@ $(function(){
 
     function takeOpposingCard(deck, remove){
         var deckToTakeFrom = swapDeck(deck);
-        var index = indexes[deckToTakeFrom + "Index"]-1;
         var cardsToTakeFrom = cards[deckToTakeFrom + "Cards"];
-        var card = (remove) ? cardsToTakeFrom.splice(index, 1) : cardsToTakeFrom[index];
+        var card = (remove) ? cardsToTakeFrom.splice(0, 1)[0] : cardsToTakeFrom[0];
         return card;
     }   
 
