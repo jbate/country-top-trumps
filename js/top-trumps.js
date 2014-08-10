@@ -60,7 +60,8 @@ $(function(){
         .append(flag)
         .append($("<div/>", { "class": "facts" })
                 .append("<strong>Native name:</strong> " + card.nativeName + "<br> " + 
-                        "<strong>Capital:</strong> " + card.capital)
+                        "<strong>Capital:</strong> " + card.capital + "<br>" +
+                        "<strong>Region:</strong> " + card.subregion)
 
                 // Criteria to play with
                 .append(createCriterion("Area", formatNumber(card.area), " km<sup>2</sup>", deck))
