@@ -4,16 +4,20 @@ $(function(){
     cards.holdingCards = null;
     cards.challengingCards = null;
 
-    if('localStorage' in window && localStorage.getItem("countries") !== null){
-        var countries = JSON.parse(localStorage.getItem("countries"));
-        setupPack(countries);
-    } else {
-        $.getJSON("country-data.json", function(countries){
-            if('localStorage' in window){
-                localStorage.setItem("countries", JSON.stringify(countries));
-            }
+    init();
+
+    function init(){
+        if('localStorage' in window && localStorage.getItem("countries") !== null){
+            var countries = JSON.parse(localStorage.getItem("countries"));
             setupPack(countries);
-        });
+        } else {
+            $.getJSON("country-data.json", function(countries){
+                if('localStorage' in window){
+                    localStorage.setItem("countries", JSON.stringify(countries));
+                }
+                setupPack(countries);
+            });
+        }
     }
 
     function setupPack (countries){
@@ -131,8 +135,8 @@ $(function(){
         return (num) ? num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") : 0;
     }
 
-    function updateHighScore (score){
-        if(score > highScore){
+    function updateHighScore (score, reset){
+        if(score > highScore || reset){
             highScore = score;
             if('localStorage' in window){
                 localStorage.setItem("highScore", JSON.stringify(highScore));
@@ -154,4 +158,13 @@ $(function(){
         }
                 
     }
+
+    $("#reset-score").on("click", function(e){
+            updateHighScore(0, true);
+            e.preventDefault();
+    });
+    $("#re-draw").on("click", function(e){
+            init();
+            e.preventDefault();
+    });
 });
