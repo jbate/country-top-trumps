@@ -43,6 +43,11 @@ html {
 }
 #high-score {
 	text-transform: uppercase;
+	border-bottom: 2px solid #e5e5e5;
+}
+#reset-score, #re-draw {
+	color: #d14;
+	cursor: pointer;
 }
 
 .side {
