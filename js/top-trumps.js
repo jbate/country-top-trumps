@@ -160,7 +160,7 @@ $(function(){
     }
 
     $("#reset-score").on("click", function(e){
-            updateHighScore(0, true);
+            updateHighScore(cards.holdingCards.length, true);
             e.preventDefault();
     });
     $("#re-draw").on("click", function(e){
