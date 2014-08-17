@@ -1,6 +1,7 @@
 $(function(){
     var cards = [],
         highScore = 0;
+        packSize = 0;
     cards.holdingCards = null;
     cards.challengingCards = null;
 
@@ -22,6 +23,15 @@ $(function(){
 
     function setupPack (countries){
         countries.sort(function() { return 0.5 - Math.random() }); // Shuffle deck
+        
+        // Render the pack size select box (one-time only)
+        createPackSizeSelector(countries.length);
+
+        // Re-size the pack if needed
+        if(packSize > 0){
+            countries = countries.splice(0, packSize);
+        }
+        packSize = countries.length;
         cards.holdingCards = countries.splice(0, countries.length/2); // Split in two
         cards.challengingCards = countries;
         // Read/Set high score data
@@ -60,7 +70,7 @@ $(function(){
         });
         
         // Add to DOM
-        $("#" + deck + "-card .inner").html("<h1>" + card.name + "</h1>")
+        $("#" + deck + "-card .inner").hide().html("<h1>" + card.name + "</h1>")
         .append(flag)
         .append($("<div/>", { "class": "facts" })
                 .append("<strong>Native name:</strong> " + card.nativeName + "<br> " + 
@@ -68,18 +78,20 @@ $(function(){
                         "<strong>Region:</strong> " + card.subregion)
 
                 // Criteria to play with
-                .append(createCriterion("Area", formatNumber(card.area), " km<sup>2</sup>", deck))
-                .append(createCriterion("Population", formatNumber(card.population), "", deck))
-                .append(createCriterion("Borders", formatNumber(card.borders.length), "", deck))    
+                .append(createCriterion("Area", numberWithoutCommas(card.area), " km<sup>2</sup>", deck))
+                .append(createCriterion("Population", numberWithoutCommas(card.population), "", deck))
+                .append(createCriterion("Borders", numberWithoutCommas(card.borders.length), "", deck))    
         );
         updateCardsRemaining(deck);
         preloadNextImage(deck);
+        $("#" + deck + "-card .inner").fadeIn(300);
     }
 
     function createCriterion(key, value, suffix, deck){
         var container = $("<div/>", {
             "html": "<strong>" + key + ":</strong> ",
-            "class": "criterion clearfix"
+            "class": "criterion clearfix",
+            "id": deck + "-" + key.toLowerCase()
         });
 
         if(deck == "holding"){
@@ -87,13 +99,7 @@ $(function(){
                 html: value + suffix
             }));
             container.on("click", function(){
-                // Convert to number
-                var holdingVal = (value) ? parseInt(value.replace(/,/g,'')) : value;
-                var challengingCard = takeOpposingCard(deck, false);
-                var challengingVal = challengingCard[key.toLowerCase()];
-                // Measure length of array if needed
-                challengingVal = (typeof(challengingVal) != "number") ? challengingVal.length : challengingVal;
-                var result = (holdingVal > challengingVal) ? "WIN" : (holdingVal < challengingVal) ? "LOSE" : "TIE";
+                var result = decideResult(key, value, deck);
                 
                 // If Win, take card, else if Lose, give it up
                 if(result == "WIN"){
@@ -101,8 +107,11 @@ $(function(){
                     updateHighScore(cards.holdingCards.length);
                     updateCardsRemaining(deck);
                 } else if (result == "LOSE"){
+                    flashChallengingValue(deck, key);
                     takeCard(swapDeck(deck));
                     updateCardsRemaining(swapDeck(deck));
+                } else if (result == "TIE"){
+                    // Do something clever
                 }
             });
         } else {
@@ -131,8 +140,46 @@ $(function(){
         return card;
     }   
 
-    function formatNumber (num) {
+    function getChallengingValue(card, key){
+        var challengingVal = card[key.toLowerCase()];
+        // Measure length of array if needed
+        challengingVal = (typeof(challengingVal) != "number") ? challengingVal.length : challengingVal;
+        return challengingVal;
+    }
+
+    function flashChallengingValue(deck, key){
+        var challengingVal = getChallengingValue(takeOpposingCard(deck, false), key);
+        var valDiv = $("#challenging-" + key.toLowerCase()).find("span");
+        var valStr = numberWithCommas(challengingVal);
+        if(key.toLowerCase() == "area"){
+            valStr += " km<sup>2</sup>";
+        }
+        
+        valDiv.fadeOut("fast", function() {
+           $(this).html(numberWithCommas(valStr)).fadeIn();
+        });
+        setTimeout(function(){
+            valDiv.fadeOut("fast", function() {
+                $(this).html("?").fadeIn();
+            });
+        },1500);
+    }
+
+    function decideResult(key, value, deck){
+        // Convert to number
+        var holdingVal = (value) ? parseInt(value.replace(/,/g,'')) : value;
+        var challengingCard = takeOpposingCard(deck, false);
+        var challengingVal = getChallengingValue(challengingCard, key);
+        var result = (holdingVal > challengingVal) ? "WIN" : (holdingVal < challengingVal) ? "LOSE" : "TIE";
+        return result;
+    }
+
+    function numberWithoutCommas (num) {
         return (num) ? num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") : 0;
+    }
+
+    function numberWithCommas (num) {
+        return num.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     }
 
     function updateHighScore (score, reset){
@@ -147,6 +194,21 @@ $(function(){
 
     function updateCardsRemaining(deck){
         $("#" + deck + "-cards-remaining span").text(cards[deck + "Cards"].length);
+    }
+
+    function createPackSizeSelector(fullPackSize){
+        if($("#pack-size-selector").length == 0){
+            var selectBox = $("<select/>", {"id": "pack-size-selector"});
+            selectBox.append($("<option/>", {"value": fullPackSize, "text": "Full (" + fullPackSize + ")"}));
+            selectBox.append($("<option/>", {"value": Math.round(fullPackSize/2), "text": "Half (" + Math.round(fullPackSize/2) + ")"}));
+            selectBox.append($("<option/>", {"value": Math.round(fullPackSize/3), "text": "Third (" + Math.round(fullPackSize/3) + ")"}));
+            selectBox.append($("<option/>", {"value": Math.round(fullPackSize/4), "text": "Quarter (" + Math.round(fullPackSize/4) + ")"}));
+            selectBox.on("change", function(e){
+                packSize = $("option:selected", this).val();
+                e.stopPropagation();
+            });
+            $("#re-draw").append(selectBox);
+        }
     }
 
     function preloadNextImage(deck){
@@ -164,7 +226,10 @@ $(function(){
             e.preventDefault();
     });
     $("#re-draw").on("click", function(e){
-            init();
+            // Re-draw (unless we're just changing the pack size)
+            if(!$(e.target).is("select")){
+                init();
+            }
             e.preventDefault();
     });
 });

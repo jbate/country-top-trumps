@@ -63,7 +63,7 @@ html {
 	background: #f3f3f3;
 	background-image: linear-gradient(#f9f9f9, #f3f3f3);
 }
-.side span {
+.side span, .side select {
 	color: #d14;
 	float: right;
 	font-family: Redressed,'Helvetica Neue', Helvetica, Arial, sans-serif;
