@@ -60,7 +60,7 @@ $(function(){
         });
         
         // Add to DOM
-        $("#" + deck + "-card .inner").html("<h1>" + card.name + "</h1>")
+        $("#" + deck + "-card .inner").hide().html("<h1>" + card.name + "</h1>")
         .append(flag)
         .append($("<div/>", { "class": "facts" })
                 .append("<strong>Native name:</strong> " + card.nativeName + "<br> " + 
@@ -74,6 +74,7 @@ $(function(){
         );
         updateCardsRemaining(deck);
         preloadNextImage(deck);
+        $("#" + deck + "-card .inner").fadeIn(300);
     }
 
     function createCriterion(key, value, suffix, deck){
