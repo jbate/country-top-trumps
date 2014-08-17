@@ -78,9 +78,9 @@ $(function(){
                         "<strong>Region:</strong> " + card.subregion)
 
                 // Criteria to play with
-                .append(createCriterion("Area", formatNumber(card.area), " km<sup>2</sup>", deck))
-                .append(createCriterion("Population", formatNumber(card.population), "", deck))
-                .append(createCriterion("Borders", formatNumber(card.borders.length), "", deck))    
+                .append(createCriterion("Area", numberWithoutCommas(card.area), " km<sup>2</sup>", deck))
+                .append(createCriterion("Population", numberWithoutCommas(card.population), "", deck))
+                .append(createCriterion("Borders", numberWithoutCommas(card.borders.length), "", deck))    
         );
         updateCardsRemaining(deck);
         preloadNextImage(deck);
@@ -90,7 +90,8 @@ $(function(){
     function createCriterion(key, value, suffix, deck){
         var container = $("<div/>", {
             "html": "<strong>" + key + ":</strong> ",
-            "class": "criterion clearfix"
+            "class": "criterion clearfix",
+            "id": deck + "-" + key.toLowerCase()
         });
 
         if(deck == "holding"){
@@ -98,13 +99,7 @@ $(function(){
                 html: value + suffix
             }));
             container.on("click", function(){
-                // Convert to number
-                var holdingVal = (value) ? parseInt(value.replace(/,/g,'')) : value;
-                var challengingCard = takeOpposingCard(deck, false);
-                var challengingVal = challengingCard[key.toLowerCase()];
-                // Measure length of array if needed
-                challengingVal = (typeof(challengingVal) != "number") ? challengingVal.length : challengingVal;
-                var result = (holdingVal > challengingVal) ? "WIN" : (holdingVal < challengingVal) ? "LOSE" : "TIE";
+                var result = decideResult(key, value, deck);
                 
                 // If Win, take card, else if Lose, give it up
                 if(result == "WIN"){
@@ -112,8 +107,11 @@ $(function(){
                     updateHighScore(cards.holdingCards.length);
                     updateCardsRemaining(deck);
                 } else if (result == "LOSE"){
+                    flashChallengingValue(deck, key);
                     takeCard(swapDeck(deck));
                     updateCardsRemaining(swapDeck(deck));
+                } else if (result == "TIE"){
+                    // Do something clever
                 }
             });
         } else {
@@ -142,8 +140,46 @@ $(function(){
         return card;
     }   
 
-    function formatNumber (num) {
+    function getChallengingValue(card, key){
+        var challengingVal = card[key.toLowerCase()];
+        // Measure length of array if needed
+        challengingVal = (typeof(challengingVal) != "number") ? challengingVal.length : challengingVal;
+        return challengingVal;
+    }
+
+    function flashChallengingValue(deck, key){
+        var challengingVal = getChallengingValue(takeOpposingCard(deck, false), key);
+        var valDiv = $("#challenging-" + key.toLowerCase()).find("span");
+        var valStr = numberWithCommas(challengingVal);
+        if(key.toLowerCase() == "area"){
+            valStr += " km<sup>2</sup>";
+        }
+        
+        valDiv.fadeOut("fast", function() {
+           $(this).html(numberWithCommas(valStr)).fadeIn();
+        });
+        setTimeout(function(){
+            valDiv.fadeOut("fast", function() {
+                $(this).html("?").fadeIn();
+            });
+        },1500);
+    }
+
+    function decideResult(key, value, deck){
+        // Convert to number
+        var holdingVal = (value) ? parseInt(value.replace(/,/g,'')) : value;
+        var challengingCard = takeOpposingCard(deck, false);
+        var challengingVal = getChallengingValue(challengingCard, key);
+        var result = (holdingVal > challengingVal) ? "WIN" : (holdingVal < challengingVal) ? "LOSE" : "TIE";
+        return result;
+    }
+
+    function numberWithoutCommas (num) {
         return (num) ? num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") : 0;
+    }
+
+    function numberWithCommas (num) {
+        return num.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     }
 
     function updateHighScore (score, reset){
