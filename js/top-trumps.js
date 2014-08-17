@@ -1,6 +1,7 @@
 $(function(){
     var cards = [],
         highScore = 0;
+        packSize = 0;
     cards.holdingCards = null;
     cards.challengingCards = null;
 
@@ -22,6 +23,15 @@ $(function(){
 
     function setupPack (countries){
         countries.sort(function() { return 0.5 - Math.random() }); // Shuffle deck
+        
+        // Render the pack size select box (one-time only)
+        createPackSizeSelector(countries.length);
+
+        // Re-size the pack if needed
+        if(packSize > 0){
+            countries = countries.splice(0, packSize);
+        }
+        packSize = countries.length;
         cards.holdingCards = countries.splice(0, countries.length/2); // Split in two
         cards.challengingCards = countries;
         // Read/Set high score data
@@ -150,6 +160,21 @@ $(function(){
         $("#" + deck + "-cards-remaining span").text(cards[deck + "Cards"].length);
     }
 
+    function createPackSizeSelector(fullPackSize){
+        if($("#pack-size-selector").length == 0){
+            var selectBox = $("<select/>", {"id": "pack-size-selector"});
+            selectBox.append($("<option/>", {"value": fullPackSize, "text": "Full (" + fullPackSize + ")"}));
+            selectBox.append($("<option/>", {"value": Math.round(fullPackSize/2), "text": "Half (" + Math.round(fullPackSize/2) + ")"}));
+            selectBox.append($("<option/>", {"value": Math.round(fullPackSize/3), "text": "Third (" + Math.round(fullPackSize/3) + ")"}));
+            selectBox.append($("<option/>", {"value": Math.round(fullPackSize/4), "text": "Quarter (" + Math.round(fullPackSize/4) + ")"}));
+            selectBox.on("change", function(e){
+                packSize = $("option:selected", this).val();
+                e.stopPropagation();
+            });
+            $("#re-draw").append(selectBox);
+        }
+    }
+
     function preloadNextImage(deck){
         // Get the next one
         var card = cards[deck + "Cards"][1];
@@ -165,7 +190,10 @@ $(function(){
             e.preventDefault();
     });
     $("#re-draw").on("click", function(e){
-            init();
+            // Re-draw (unless we're just changing the pack size)
+            if(!$(e.target).is("select")){
+                init();
+            }
             e.preventDefault();
     });
 });
